@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #6d5acd;
+  --color-primary-light: #8b7de0;
+  --color-surface: #0a0b10;
+  --color-surface-raised: #12141d;
+  --color-surface-overlay: #1a1c28;
+  --color-border: #232636;
+  --color-border-light: #2e3146;
+  --color-text: #e2e4f0;
+  --color-text-muted: #6b6f88;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-primary);
+}
