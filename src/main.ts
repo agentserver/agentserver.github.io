@@ -1,6 +1,7 @@
 import "./style.css";
 
 const GITHUB_URL = "https://github.com/agentserver/agentserver";
+const PLATFORM_URL = "https://platform.agentserver.dev";
 
 function icon(name: string): string {
   const icons: Record<string, string> = {
@@ -34,6 +35,9 @@ function navbar(): string {
           ${icon("github")}
           <span>Star on GitHub</span>
         </a>
+        <a href="${PLATFORM_URL}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-lg bg-primary px-3.5 py-1.5 text-sm font-medium text-white hover:bg-primary-light transition-colors no-underline">
+          Try Now ${icon("arrow")}
+        </a>
       </div>
     </div>
   </nav>`;
@@ -47,16 +51,16 @@ function hero(): string {
       <div class="mx-auto max-w-3xl text-center">
         <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface-raised px-4 py-1.5 text-sm text-text-muted">
           <span class="inline-block size-2 rounded-full bg-emerald-400"></span>
-          Open source &middot; MIT License
+          Open source &middot; Supports opencode &amp; OpenClaw
         </div>
         <h1 class="text-4xl font-bold leading-tight tracking-tight md:text-6xl">
           Run your coding agent anywhere.
           <span class="block text-primary-light">Access it in the browser.</span>
         </h1>
         <p class="mt-6 text-lg text-text-muted md:text-xl">
-          agentserver is to <a href="https://github.com/opencode-ai/opencode" class="text-text hover:text-primary-light transition-colors underline underline-offset-4">opencode</a> what
-          <a href="https://github.com/coder/code-server" class="text-text hover:text-primary-light transition-colors underline underline-offset-4">code-server</a> is to VS Code — a self-hosted
-          web interface that lets your team use a coding agent from a browser.
+          A self-hosted platform for deploying <a href="https://github.com/opencode-ai/opencode" class="text-text hover:text-primary-light transition-colors underline underline-offset-4">opencode</a>
+          and <a href="https://github.com/openclaw/openclaw" class="text-text hover:text-primary-light transition-colors underline underline-offset-4">OpenClaw</a>
+          to the cloud — your team gets browser access to AI coding agents, no local setup needed.
         </p>
         <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a href="#quickstart" class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-white hover:bg-primary-light transition-colors no-underline">
@@ -93,9 +97,9 @@ function features(): string {
   const items = [
     {
       icon: "browser",
-      title: "Browser-based coding agent",
+      title: "Cloud-hosted AI agents",
       description:
-        "Each sandbox runs opencode serve, accessible via a per-sandbox subdomain. No local installation required.",
+        "Deploy opencode and OpenClaw sandboxes to the cloud. Each gets a dedicated subdomain, accessible from any browser.",
     },
     {
       icon: "tunnel",
@@ -272,11 +276,9 @@ function footer(): string {
       <div class="flex items-center gap-2">
         <div class="flex size-6 items-center justify-center rounded bg-primary text-white font-mono font-bold text-xs">A</div>
         <span>agentserver</span>
-        <span>&middot;</span>
-        <span>MIT License</span>
       </div>
       <div class="flex items-center gap-4">
-        <span>Built for the <a href="https://github.com/opencode-ai/opencode" target="_blank" rel="noopener" class="text-text hover:text-primary-light transition-colors underline underline-offset-4">opencode</a> community</span>
+        <a href="${PLATFORM_URL}" target="_blank" rel="noopener" class="text-text-muted hover:text-text transition-colors no-underline">Platform</a>
         <a href="${GITHUB_URL}" target="_blank" rel="noopener" class="text-text-muted hover:text-text transition-colors">${icon("github")}</a>
       </div>
     </div>
