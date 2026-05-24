@@ -2,315 +2,531 @@ import "./style.css";
 
 const GITHUB_URL = "https://github.com/agentserver/agentserver";
 const PLATFORM_URL = "https://platform.agentserver.dev";
+const DOCS_URL = `${GITHUB_URL}#readme`;
+const SELFHOST_URL = `${GITHUB_URL}#self-hosting`;
+const ISSUES_URL = `${GITHUB_URL}/issues`;
+const RELEASES_URL = `${GITHUB_URL}/releases`;
 
-function icon(name: string): string {
-  const icons: Record<string, string> = {
-    github: `<svg class="size-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>`,
-    star: `<svg class="size-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568L24 9.306l-6 5.847 1.417 8.26L12 19.434l-7.417 3.979L6 15.153 0 9.306l8.332-1.151z"/></svg>`,
-    terminal: `<svg class="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m7.5 4.5 7.5 7.5-7.5 7.5m9-1.5h4.5"/></svg>`,
-    browser: `<svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5a17.92 17.92 0 0 1-8.716-2.247m0 0A9 9 0 0 1 3 12c0-1.47.352-2.858.976-4.082"/></svg>`,
-    tunnel: `<svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>`,
-    workspace: `<svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z"/></svg>`,
-    docker: `<svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3m3 3a3 3 0 1 0 0 6h13.5a3 3 0 1 0 0-6m-16.5-3a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3m-19.5 0a4.5 4.5 0 0 1 .9-2.7L5.737 5.1a3.375 3.375 0 0 1 2.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 0 1 .9 2.7m0 0h.375a2.625 2.625 0 0 1 0 5.25H17.25"/></svg>`,
-    shield: `<svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z"/></svg>`,
-    key: `<svg class="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z"/></svg>`,
-    arrow: `<svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>`,
-  };
-  return icons[name] ?? "";
+type Locale = "zh" | "en";
+type Dict = Record<string, string>;
+type Dicts = Record<Locale, Dict>;
+
+const strings: Dicts = {
+  zh: {
+    "nav.brand": "agentserver",
+    "nav.why": "卖点",
+    "nav.how": "上手",
+    "nav.compare": "对比",
+    "nav.signin": "登录 →",
+    "nav.lang.toggle": "EN",
+
+    "hero.h1": "你的个人算力网。",
+    "hero.sub":
+      "agentserver 把笔记本、云沙箱、家里的服务器编成一个工作区——从浏览器、命令行,或微信,一并指挥。",
+    "hero.cta.primary": "▸ 登录",
+    "hero.cta.secondary": "在 GitHub 上查看",
+    "hero.term.macbook": "office-macbook · codex · 10:14",
+    "hero.term.sandbox": "session#a3f · paused 12:30",
+    "hero.chat.title": "我自己 · 微信 18:42",
+    "hero.chat.user": "上午让你改的 loss 函数跑通了吗？",
+    "hero.chat.bot1": "📎 续上会话 session#a3f（office-macbook · 6h 前）",
+    "hero.chat.bot2": "🔨 跑 pytest tests/test_loss.py …",
+    "hero.chat.bot3": "✓ 17/17 通过 · diff 已推到 feature/weighted-loss",
+    "hero.chip.online": "在线",
+
+    "quote.attrib": "— Addy Osmani · Director, Google Gemini & Cloud AI",
+    "quote.caption": "agentserver = 那个 orchestrator。",
+    "quote.conductor": "conductor",
+    "quote.orchestrator": "orchestrator",
+    "quote.before": '"Once you juggle 10+ agents across machines, you stop being a ',
+    "quote.middle": " and become an ",
+    "quote.after": '."',
+
+    "pillars.heading": "为什么用 agentserver",
+    "pillars.session.title": "同一段会话，任意设备",
+    "pillars.session.body":
+      "codex 会话本身跑在服务端。早上在笔电上没改完的任务，地铁里用微信续上同一段对话继续推进——换的不是命令的目的地，是 agent 的前端。",
+    "pillars.pocket.title": "装在口袋里的指挥台",
+    "pillars.pocket.body":
+      "微信里一句中文，落到任意设备执行，结果推回同一个聊天框。Telegram 同样支持。",
+    "pillars.workspace.title": "一个工作区，所有设备",
+    "pillars.workspace.body":
+      "云沙箱、本地机器、IM-bound 代理——全在同一份注册表里，并排出现在 Web UI 上。",
+    "pillars.tunnel.title": "只要有网就能接入",
+    "pillars.tunnel.body":
+      "本地的 codex / Claude Code / opencode 通过 WebSocket 拨号入网，呈现为一个沙箱。不需要公网 IP、不需要开放端口。",
+    "pillars.also":
+      "+ 暂停 / 恢复沙箱 · Jupyter 笔记本 · 多人协作 · 凭证代理 · 操作审计 · SSO（GitHub / OIDC）· 自托管",
+
+    "compare.heading": "和已有的工具相比",
+    "compare.col.tool": "产品",
+    "compare.col.local": "本地代理",
+    "compare.col.cloud": "云沙箱",
+    "compare.col.peer": "跨设备组网",
+    "compare.col.session": "会话跨终端",
+    "compare.col.chat": "IM 通道",
+    "compare.caption": "唯一同时勾上五列的产品。",
+
+    "onb.heading": "7 步，把你的设备连上来",
+    "onb.s1.title": "注册",
+    "onb.s1.body": "邮箱 / GitHub / SSO 任选",
+    "onb.s2.title": "链接模型账号",
+    "onb.s2.body": "自带 ChatGPT / Anthropic 凭证，或选平台托管账号",
+    "onb.s3.title": "入网设备",
+    "onb.s3.body": "brew install codex → 粘贴注册码",
+    "onb.s4.title": '(可选) 选一台"指挥机"',
+    "onb.s4.body": "通常是你的主力笔电；如果只用微信指挥，这步可以跳过",
+    "onb.s5.title": "(可选) 开 Jupyter",
+    "onb.s5.body": "想手写代码？ctx 已预注入 kernel",
+    "onb.s6.title": "绑定微信",
+    "onb.s6.body": "扫码即可，从此聊天框 = 终端",
+    "onb.s7.title": "邀请协作者",
+    "onb.s7.body": "角色：owner / maintainer / developer / guest",
+    "onb.docs": "完整文档 →",
+
+    "cta.heading": "把你的设备，编进同一张算力网。",
+    "cta.primary": "▸ 登录",
+    "cta.secondary": "在自己的域名上自托管",
+
+    "footer.col1.title": "agentserver",
+    "footer.col2.title": "社区",
+    "footer.col2.weixin": "微信群",
+    "footer.col2.telegram": "Telegram",
+    "footer.col2.issues": "Issue 跟踪",
+    "footer.col3.title": "法律",
+    "footer.col3.license": "Apache-2.0",
+    "footer.col3.privacy": "隐私",
+    "footer.col3.contact": "联系",
+  },
+  en: {
+    "nav.brand": "agentserver",
+    "nav.why": "Why",
+    "nav.how": "How",
+    "nav.compare": "Compare",
+    "nav.signin": "Sign in →",
+    "nav.lang.toggle": "中",
+
+    "hero.h1": "Your Personal Computility.",
+    "hero.sub":
+      "agentserver weaves laptops, cloud sandboxes, and home servers into one workspace — commanded from your browser, your CLI, or your WeChat chat.",
+    "hero.cta.primary": "▸ Sign in",
+    "hero.cta.secondary": "View on GitHub",
+    "hero.term.macbook": "office-macbook · codex · 10:14",
+    "hero.term.sandbox": "session#a3f · paused 12:30",
+    "hero.chat.title": "me · WeChat 18:42",
+    "hero.chat.user": "Did the loss-fn refactor we started this morning land?",
+    "hero.chat.bot1": "📎 resumed session#a3f (office-macbook · 6h ago)",
+    "hero.chat.bot2": "🔨 running pytest tests/test_loss.py …",
+    "hero.chat.bot3": "✓ 17/17 passed · pushed to feature/weighted-loss",
+    "hero.chip.online": "online",
+
+    "quote.attrib": "— Addy Osmani · Director, Google Gemini & Cloud AI",
+    "quote.caption": "agentserver is that orchestrator.",
+    "quote.conductor": "conductor",
+    "quote.orchestrator": "orchestrator",
+    "quote.before": '"Once you juggle 10+ agents across machines, you stop being a ',
+    "quote.middle": " and become an ",
+    "quote.after": '."',
+
+    "pillars.heading": "Why agentserver",
+    "pillars.session.title": "One session, any device",
+    "pillars.session.body":
+      "codex sessions live on the server, not the laptop they started from. Pause a half-finished refactor at the office; pick up the same conversation from WeChat on the subway home. The front-end moves; the agent does not.",
+    "pillars.pocket.title": "Pocket-sized command line",
+    "pillars.pocket.body":
+      "One sentence in WeChat lands on the right device. The result comes back to the same chat. Telegram supported too.",
+    "pillars.workspace.title": "One workspace, every device",
+    "pillars.workspace.body":
+      "Cloud sandboxes, local machines, IM-bound agents — all in one registry, side by side in the Web UI.",
+    "pillars.tunnel.title": "If it can reach the internet, it can join.",
+    "pillars.tunnel.body":
+      "Your local codex / Claude Code / opencode dials home over WebSocket and shows up as a sandbox. No public IP, no open ports.",
+    "pillars.also":
+      "+ Pausable sandboxes · Jupyter notebook · Multi-user · Credential proxy · Audit log · SSO (GitHub / OIDC) · Self-host",
+
+    "compare.heading": "How it differs",
+    "compare.col.tool": "Tool",
+    "compare.col.local": "local",
+    "compare.col.cloud": "cloud",
+    "compare.col.peer": "peer",
+    "compare.col.session": "session",
+    "compare.col.chat": "chat",
+    "compare.caption": "The only one with all five checked.",
+
+    "onb.heading": "7 steps to wire it all up",
+    "onb.s1.title": "Register",
+    "onb.s1.body": "Email / GitHub / SSO — your pick",
+    "onb.s2.title": "Link a model account",
+    "onb.s2.body":
+      "Bring your own ChatGPT / Anthropic credential, or use a managed one",
+    "onb.s3.title": "Enroll devices",
+    "onb.s3.body": "brew install codex → paste the registration code",
+    "onb.s4.title": '(Optional) Pick a "command machine"',
+    "onb.s4.body": "Usually your daily-driver laptop; skip if you only drive from IM",
+    "onb.s5.title": "(Optional) open Jupyter",
+    "onb.s5.body": "Prefer hand-written code? ctx is pre-injected in every kernel",
+    "onb.s6.title": "Bind WeChat",
+    "onb.s6.body": "Scan the QR. From now on, the chat window is your terminal",
+    "onb.s7.title": "Invite collaborators",
+    "onb.s7.body": "Roles: owner / maintainer / developer / guest",
+    "onb.docs": "Full docs →",
+
+    "cta.heading": "Weave your devices into one Computility.",
+    "cta.primary": "▸ Sign in",
+    "cta.secondary": "Self-host on your own domain",
+
+    "footer.col1.title": "agentserver",
+    "footer.col2.title": "Community",
+    "footer.col2.weixin": "WeChat group",
+    "footer.col2.telegram": "Telegram",
+    "footer.col2.issues": "Issue tracker",
+    "footer.col3.title": "Legal",
+    "footer.col3.license": "Apache-2.0",
+    "footer.col3.privacy": "Privacy",
+    "footer.col3.contact": "Contact",
+  },
+};
+
+const STORAGE_KEY = "locale";
+
+function detectLocale(): Locale {
+  const stored = window.localStorage.getItem(STORAGE_KEY);
+  if (stored === "zh" || stored === "en") return stored;
+  const nav = window.navigator.language || "";
+  return nav.toLowerCase().startsWith("zh") ? "zh" : "en";
 }
 
-function navbar(): string {
+function setLocaleAndReload(l: Locale): void {
+  window.localStorage.setItem(STORAGE_KEY, l);
+  window.location.reload();
+}
+
+const locale: Locale = detectLocale();
+function t(key: string): string {
+  return strings[locale][key] ?? strings.en[key] ?? key;
+}
+
+function navBar(): string {
+  const next: Locale = locale === "zh" ? "en" : "zh";
   return `
-  <nav class="fixed top-0 z-50 w-full border-b border-border bg-surface/80 backdrop-blur-md">
-    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-      <a href="#" class="flex items-center gap-2.5 text-text font-semibold text-lg no-underline">
-        <div class="flex size-8 items-center justify-center rounded-lg bg-primary text-white font-mono font-bold text-sm">A</div>
-        <span>agentserver</span>
+  <nav class="sticky top-0 z-50 backdrop-blur-md bg-[var(--background)]/85 border-b border-[var(--border)]">
+    <div class="mx-auto max-w-6xl px-6 h-14 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-2 font-mono text-sm no-underline text-[var(--foreground)]">
+        <span aria-hidden="true" class="inline-block h-2 w-2 rounded-full bg-[var(--home-accent)] animate-pulse motion-reduce:animate-none"></span>
+        <span>▸ ${t("nav.brand")}</span>
       </a>
-      <div class="hidden items-center gap-8 md:flex">
-        <a href="#features" class="text-sm text-text-muted hover:text-text transition-colors no-underline">Features</a>
-        <a href="#architecture" class="text-sm text-text-muted hover:text-text transition-colors no-underline">Architecture</a>
-        <a href="#quickstart" class="text-sm text-text-muted hover:text-text transition-colors no-underline">Get Started</a>
-        <a href="${GITHUB_URL}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-lg border border-border px-3.5 py-1.5 text-sm text-text-muted hover:text-text hover:border-border-light transition-colors no-underline">
-          ${icon("github")}
-          <span>Star on GitHub</span>
-        </a>
-        <a href="${PLATFORM_URL}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-lg bg-primary px-3.5 py-1.5 text-sm font-medium text-white hover:bg-primary-light transition-colors no-underline">
-          Try Now ${icon("arrow")}
-        </a>
+      <div class="hidden md:flex items-center gap-6 font-mono text-xs text-[var(--muted-foreground)]">
+        <a href="#why" class="hover:text-[var(--foreground)] no-underline">${t("nav.why")}</a>
+        <a href="#how" class="hover:text-[var(--foreground)] no-underline">${t("nav.how")}</a>
+        <a href="#compare" class="hover:text-[var(--foreground)] no-underline">${t("nav.compare")}</a>
+      </div>
+      <div class="flex items-center gap-4">
+        <button
+          type="button"
+          id="lang-toggle"
+          data-next="${next}"
+          class="font-mono text-xs text-[var(--muted-foreground)] hover:text-[var(--foreground)] bg-transparent border-0 cursor-pointer"
+          aria-label="Switch language"
+        >${t("nav.lang.toggle")}</button>
+        <a
+          href="${PLATFORM_URL}"
+          class="font-mono text-xs px-3 py-1.5 rounded-md bg-[var(--home-accent)] text-[var(--home-accent-fg)] hover:opacity-90 no-underline"
+        >${t("nav.signin")}</a>
       </div>
     </div>
   </nav>`;
 }
 
+type TermLine = { delay: number; text: string; kind: "cmd" | "dim" | "ok" };
+
+function term(title: string, lines: TermLine[]): string {
+  return `
+  <div class="rounded-md border border-[var(--home-term-border)] bg-[var(--home-term-bg)] font-mono text-[11px] overflow-hidden">
+    <div class="px-3 py-1.5 border-b border-[var(--home-term-border)] text-[var(--home-term-dim)]">${title}</div>
+    <div class="px-3 py-2 space-y-1">
+      ${lines
+        .map((ln) => {
+          const color =
+            ln.kind === "ok"
+              ? "text-[var(--home-accent)]"
+              : ln.kind === "dim"
+                ? "text-[var(--home-term-dim)]"
+                : "text-[var(--home-term-fg)]";
+          return `<div class="ln" style="animation-delay:${ln.delay}ms"><span class="${color}">${ln.text}</span></div>`;
+        })
+        .join("")}
+    </div>
+  </div>`;
+}
+
+type Bubble = { delay: number; who: "me" | "bot"; text: string; thumb?: boolean };
+
+function chatPane(): string {
+  const bubbles: Bubble[] = [
+    { delay: 600, who: "me", text: t("hero.chat.user") },
+    { delay: 1000, who: "bot", text: t("hero.chat.bot1") },
+    { delay: 2200, who: "bot", text: t("hero.chat.bot2") },
+    { delay: 3200, who: "bot", text: t("hero.chat.bot3"), thumb: true },
+  ];
+  const bubblesHtml = bubbles
+    .map((b) => {
+      const align = b.who === "me" ? "justify-end" : "justify-start";
+      const skin =
+        b.who === "me"
+          ? "bg-[#95ec69] text-black"
+          : "bg-white text-black dark:bg-[#2a2a2a] dark:text-white";
+      const thumb = b.thumb
+        ? `<div class="mt-1.5 h-12 w-full rounded bg-gradient-to-br from-[var(--home-accent)]/30 to-[var(--home-accent)]/10 border border-[var(--home-accent)]/40 flex items-center justify-center text-[10px] text-[var(--home-term-dim)]">session#a3f · feature/weighted-loss · 17/17 ✓</div>`
+        : "";
+      return `<div class="bubble flex ${align}" style="animation-delay:${b.delay}ms"><div class="max-w-[80%] rounded-md px-3 py-1.5 text-xs leading-relaxed ${skin}">${b.text}${thumb}</div></div>`;
+    })
+    .join("");
+
+  return `
+  <div class="rounded-md border border-[var(--home-term-border)] bg-[#ededed] dark:bg-[#1a1a1a] overflow-hidden">
+    <div class="px-3 py-1.5 border-b border-[var(--home-term-border)] text-xs font-medium text-[var(--home-term-fg)]">${t("hero.chat.title")}</div>
+    <div role="log" aria-live="polite" class="px-3 py-3 space-y-2 min-h-[260px]">${bubblesHtml}</div>
+  </div>`;
+}
+
 function hero(): string {
+  const macLines: TermLine[] = [
+    { delay: 200, text: '$ codex "重构 loss 让它支持', kind: "cmd" },
+    { delay: 400, text: '   weighted sampling"', kind: "cmd" },
+    { delay: 600, text: "▸ edit graph.py:42-78", kind: "dim" },
+    { delay: 800, text: "⏸  session#a3f · 离开公司", kind: "ok" },
+  ];
+  const sbxLines: TermLine[] = [
+    { delay: 1200, text: "▸ codex-app-gateway · paused", kind: "dim" },
+    { delay: 1400, text: "▸ awaiting reattach …", kind: "dim" },
+    { delay: 1800, text: "▸ 18:42 attach: weixin/me", kind: "dim" },
+    { delay: 2000, text: "✓ resumed by WeChat", kind: "ok" },
+  ];
   return `
-  <section class="relative overflow-hidden pt-32 pb-20 md:pt-40 md:pb-28">
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(109,90,205,0.08),transparent_60%)]"></div>
-    <div class="relative mx-auto max-w-6xl px-6">
-      <div class="mx-auto max-w-3xl text-center">
-        <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface-raised px-4 py-1.5 text-sm text-text-muted">
-          <span class="inline-block size-2 rounded-full bg-emerald-400"></span>
-          Open source &middot; Supports opencode &amp; OpenClaw
-        </div>
-        <h1 class="text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-          Run your coding agent anywhere.
-          <span class="block text-primary-light">Access it in the browser.</span>
-        </h1>
-        <p class="mt-6 text-lg text-text-muted md:text-xl">
-          A self-hosted platform for deploying <a href="https://github.com/opencode-ai/opencode" class="text-text hover:text-primary-light transition-colors underline underline-offset-4">opencode</a>
-          and <a href="https://github.com/openclaw/openclaw" class="text-text hover:text-primary-light transition-colors underline underline-offset-4">OpenClaw</a>
-          to the cloud — your team gets browser access to AI coding agents, no local setup needed.
-        </p>
-        <div class="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-          <a href="#quickstart" class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-white hover:bg-primary-light transition-colors no-underline">
-            Get Started ${icon("arrow")}
-          </a>
-          <a href="${GITHUB_URL}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-lg border border-border px-6 py-3 text-sm font-medium text-text hover:border-border-light transition-colors no-underline">
-            ${icon("github")} View on GitHub
-          </a>
+  <section class="pt-12 pb-20">
+    <div class="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-start">
+      <div>
+        <h1 class="text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1]">${t("hero.h1")}</h1>
+        <p class="mt-6 text-base lg:text-lg text-[var(--muted-foreground)] leading-relaxed max-w-xl">${t("hero.sub")}</p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <a href="${PLATFORM_URL}" class="font-mono text-sm px-4 py-2 rounded-md bg-[var(--home-accent)] text-[var(--home-accent-fg)] hover:opacity-90 no-underline">${t("hero.cta.primary")}</a>
+          <a href="${GITHUB_URL}" target="_blank" rel="noopener noreferrer" class="font-mono text-sm px-4 py-2 rounded-md border border-[var(--border)] hover:opacity-90 no-underline text-[var(--foreground)]">${t("hero.cta.secondary")}</a>
+          <span class="font-mono text-[10px] px-2 py-1 rounded border border-[var(--home-accent)]/40 text-[var(--home-accent)]">${t("hero.chip.online")}</span>
         </div>
       </div>
-      <div class="mx-auto mt-16 max-w-2xl">
-        <div class="rounded-xl border border-border bg-surface-raised overflow-hidden shadow-2xl shadow-black/20">
-          <div class="flex items-center gap-2 border-b border-border px-4 py-3">
-            <div class="size-3 rounded-full bg-[#ff5f57]"></div>
-            <div class="size-3 rounded-full bg-[#febc2e]"></div>
-            <div class="size-3 rounded-full bg-[#28c840]"></div>
-            <span class="ml-2 text-xs text-text-muted font-mono">terminal</span>
-          </div>
-          <div class="p-5 font-mono text-sm leading-relaxed">
-            <div class="text-text-muted">$ helm install agentserver \\</div>
-            <div class="pl-6 text-text-muted">oci://ghcr.io/agentserver/charts/agentserver \\</div>
-            <div class="pl-6 text-text-muted">--namespace agentserver --create-namespace \\</div>
-            <div class="pl-6 text-text-muted">--set ingress.host=<span class="text-primary-light">"cli.example.com"</span></div>
-            <div class="mt-3 text-emerald-400">&#10003; agentserver deployed to cluster</div>
-            <div class="mt-1 text-text-muted">Open <span class="text-primary-light underline">https://cli.example.com</span> in your browser</div>
-          </div>
+      <div role="img" aria-label="${t("hero.sub")}" class="hero-demo grid grid-cols-[1fr_1fr] gap-3">
+        <div class="flex flex-col gap-3">
+          ${term(t("hero.term.macbook"), macLines)}
+          ${term(t("hero.term.sandbox"), sbxLines)}
         </div>
+        ${chatPane()}
       </div>
     </div>
   </section>`;
 }
 
-function features(): string {
+function quote(): string {
+  const accent = (text: string) =>
+    `<span class="text-[var(--home-accent)] font-medium">${text}</span>`;
+  return `
+  <section class="py-16 border-l-2 border-[var(--home-accent)] pl-6">
+    <blockquote class="text-lg lg:text-xl text-[var(--foreground)] leading-relaxed max-w-3xl">${t("quote.before")}${accent(t("quote.conductor"))}${t("quote.middle")}${accent(t("quote.orchestrator"))}${t("quote.after")}</blockquote>
+    <p class="mt-3 text-sm text-[var(--muted-foreground)] font-mono">
+      <a href="https://addyosmani.com/blog/future-agentic-coding/" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--home-accent)] hover:underline no-underline text-[var(--muted-foreground)]">${t("quote.attrib")} ↗</a>
+    </p>
+    <p class="mt-2 text-sm text-[var(--muted-foreground)]">${t("quote.caption")}</p>
+  </section>`;
+}
+
+function pillars(): string {
   const items = [
-    {
-      icon: "browser",
-      title: "Cloud-hosted AI agents",
-      description:
-        "Deploy opencode and OpenClaw sandboxes to the cloud. Each gets a dedicated subdomain, accessible from any browser.",
-    },
-    {
-      icon: "tunnel",
-      title: "Local agent tunneling",
-      description:
-        "Connect a locally-running opencode instance via a WebSocket reverse tunnel. No public IP needed.",
-    },
-    {
-      icon: "workspace",
-      title: "Workspaces & multi-tenancy",
-      description:
-        "Organize work into workspaces with role-based membership. Each workspace has a shared persistent disk.",
-    },
-    {
-      icon: "docker",
-      title: "Docker & Kubernetes",
-      description:
-        "Run sandbox containers via Docker for local dev, or Kubernetes with Agent Sandbox + gVisor isolation for production.",
-    },
-    {
-      icon: "shield",
-      title: "SSO / OIDC authentication",
-      description:
-        "Built-in GitHub OAuth and generic OIDC support. Accounts are linked by email automatically.",
-    },
-    {
-      icon: "key",
-      title: "Anthropic API proxy",
-      description:
-        "Sandboxes never see the real API key. agentserver injects it server-side via a per-sandbox proxy token.",
-    },
+    { emoji: "🧵", titleKey: "pillars.session.title", bodyKey: "pillars.session.body" },
+    { emoji: "📱", titleKey: "pillars.pocket.title", bodyKey: "pillars.pocket.body" },
+    { emoji: "🌐", titleKey: "pillars.workspace.title", bodyKey: "pillars.workspace.body" },
+    { emoji: "🔌", titleKey: "pillars.tunnel.title", bodyKey: "pillars.tunnel.body" },
   ];
-
   return `
-  <section id="features" class="border-t border-border py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-bold tracking-tight md:text-4xl">Everything you need to run coding agents at scale</h2>
-        <p class="mt-4 text-text-muted text-lg">Self-hosted, secure, and designed for teams.</p>
-      </div>
-      <div class="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        ${items
-          .map(
-            (f) => `
-          <div class="group rounded-xl border border-border bg-surface-raised p-6 transition-colors hover:border-border-light">
-            <div class="mb-4 inline-flex items-center justify-center rounded-lg bg-surface-overlay p-2.5 text-primary-light">
-              ${icon(f.icon)}
-            </div>
-            <h3 class="text-lg font-semibold">${f.title}</h3>
-            <p class="mt-2 text-sm leading-relaxed text-text-muted">${f.description}</p>
-          </div>`
-          )
-          .join("")}
-      </div>
+  <section id="why" class="py-20">
+    <h2 class="font-mono text-xs tracking-[0.2em] text-[var(--muted-foreground)] uppercase mb-8">${t("pillars.heading")}</h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+      ${items
+        .map(
+          (p) => `
+        <article class="rounded-lg border border-[var(--border)] p-6 bg-[var(--card)]">
+          <div class="text-3xl mb-3" aria-hidden="true">${p.emoji}</div>
+          <h3 class="text-lg font-semibold mb-2">${t(p.titleKey)}</h3>
+          <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">${t(p.bodyKey)}</p>
+        </article>`
+        )
+        .join("")}
     </div>
+    <p class="mt-6 font-mono text-xs text-[var(--muted-foreground)] leading-relaxed">${t("pillars.also")}</p>
   </section>`;
 }
 
-function architecture(): string {
-  const diagram = `Browser ──▶ agentserver (Go) ──▶ sandbox pod / container
-               │                   └─ opencode serve (:4096)
-               │
-               ├─ PostgreSQL (users, workspaces, sandboxes)
-               ├─ Anthropic API proxy (injects real API key)
-               │
-               │               WebSocket tunnel
-Local machine ─┼──▶ agentserver agent connect ──────────▶ agentserver
-               └─ opencode serve (:4096)                    │
-                                                    Browser access via
-                                                    subdomain proxy`;
+type Row = {
+  tool: string;
+  local: string;
+  cloud: string;
+  peer: string;
+  session: string;
+  chat: string;
+  us?: boolean;
+};
 
-  const components = [
-    {
-      name: "agentserver",
-      desc: "Go HTTP server — auth, workspace & sandbox management, subdomain proxy, WebSocket tunnel, Anthropic API proxy",
-    },
-    {
-      name: "sandbox",
-      desc: "Container running opencode serve — one per sandbox, isolated via Docker or Kubernetes Agent Sandbox",
-    },
-    {
-      name: "local agent",
-      desc: "agentserver agent connect — connects a local opencode instance to the server via a WebSocket reverse tunnel",
-    },
+function compare(): string {
+  const rows: Row[] = [
+    { tool: "OpenClaw / Claude Code Remote", local: "1", cloud: "—", peer: "—", session: "—", chat: "✓" },
+    { tool: "Claude Code on the web",        local: "—", cloud: "✓", peer: "—", session: "—", chat: "—" },
+    { tool: "CC Agent Teams",                local: "—", cloud: "✓(sub)", peer: "—", session: "—", chat: "—" },
+    { tool: "agentserver",                   local: "✓ many", cloud: "✓", peer: "✓", session: "✓ any front-end", chat: "✓", us: true },
   ];
-
   return `
-  <section id="architecture" class="border-t border-border py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-bold tracking-tight md:text-4xl">Architecture</h2>
-        <p class="mt-4 text-text-muted text-lg">Three components, one deployment.</p>
-      </div>
-      <div class="mx-auto mt-12 max-w-4xl">
-        <div class="rounded-xl border border-border bg-surface-raised overflow-hidden">
-          <div class="flex items-center gap-2 border-b border-border px-4 py-3">
-            <div class="size-3 rounded-full bg-[#ff5f57]"></div>
-            <div class="size-3 rounded-full bg-[#febc2e]"></div>
-            <div class="size-3 rounded-full bg-[#28c840]"></div>
-          </div>
-          <pre class="overflow-x-auto p-6 font-mono text-sm leading-relaxed text-text-muted"><code>${diagram}</code></pre>
-        </div>
-        <div class="mt-8 grid gap-4 md:grid-cols-3">
-          ${components
-            .map(
-              (c) => `
-            <div class="rounded-xl border border-border bg-surface-raised p-5">
-              <h3 class="font-mono text-sm font-semibold text-primary-light">${c.name}</h3>
-              <p class="mt-2 text-sm leading-relaxed text-text-muted">${c.desc}</p>
-            </div>`
-            )
+  <section id="compare" class="py-20">
+    <h2 class="font-mono text-xs tracking-[0.2em] text-[var(--muted-foreground)] uppercase mb-8">${t("compare.heading")}</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full font-mono text-xs border border-[var(--home-term-border)]">
+        <caption class="sr-only">${t("compare.heading")}</caption>
+        <thead>
+          <tr class="bg-[var(--card)] text-[var(--home-accent)]">
+            <th scope="col" class="text-left p-3 font-medium">${t("compare.col.tool")}</th>
+            <th scope="col" class="text-center p-3 font-medium">${t("compare.col.local")}</th>
+            <th scope="col" class="text-center p-3 font-medium">${t("compare.col.cloud")}</th>
+            <th scope="col" class="text-center p-3 font-medium">${t("compare.col.peer")}</th>
+            <th scope="col" class="text-center p-3 font-medium">${t("compare.col.session")}</th>
+            <th scope="col" class="text-center p-3 font-medium">${t("compare.col.chat")}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows
+            .map((r) => {
+              const rowClass = r.us
+                ? "bg-[var(--home-grid)] border-l-2 border-[var(--home-accent)]"
+                : "border-t border-[var(--home-term-border)]";
+              const cellClass = r.us ? "text-[var(--home-accent)] font-medium" : "";
+              const toolText = r.us ? `▸ ${r.tool}` : r.tool;
+              return `
+              <tr class="${rowClass}">
+                <th scope="row" class="text-left p-3 font-normal ${cellClass}">${toolText}</th>
+                <td class="text-center p-3">${r.local}</td>
+                <td class="text-center p-3">${r.cloud}</td>
+                <td class="text-center p-3">${r.peer}</td>
+                <td class="text-center p-3">${r.session}</td>
+                <td class="text-center p-3">${r.chat}</td>
+              </tr>`;
+            })
             .join("")}
-        </div>
-      </div>
+        </tbody>
+      </table>
     </div>
+    <p class="mt-4 text-sm text-[var(--muted-foreground)]">${t("compare.caption")}</p>
   </section>`;
 }
 
-function quickstart(): string {
-  const helmCode = `helm install agentserver oci://ghcr.io/agentserver/charts/agentserver \\
-  --namespace agentserver --create-namespace \\
-  --set database.url="postgres://user:pass@postgres:5432/agentserver?sslmode=disable" \\
-  --set anthropicApiKey="sk-ant-..." \\
-  --set ingress.enabled=true \\
-  --set ingress.host="cli.example.com" \\
-  --set baseDomain="cli.example.com"`;
-
-  const dockerCode = `git clone https://github.com/agentserver/agentserver.git
-cd agentserver
-
-# Build the opencode agent image
-docker build -f Dockerfile.opencode -t agentserver-agent:latest .
-
-# Set your API key
-export ANTHROPIC_API_KEY="sk-ant-..."
-
-# Start everything
-docker compose up -d`;
-
+function onboarding(): string {
+  const steps = [
+    { n: 1, titleKey: "onb.s1.title", bodyKey: "onb.s1.body" },
+    { n: 2, titleKey: "onb.s2.title", bodyKey: "onb.s2.body" },
+    { n: 3, titleKey: "onb.s3.title", bodyKey: "onb.s3.body" },
+    { n: 4, titleKey: "onb.s4.title", bodyKey: "onb.s4.body" },
+    { n: 5, titleKey: "onb.s5.title", bodyKey: "onb.s5.body" },
+    { n: 6, titleKey: "onb.s6.title", bodyKey: "onb.s6.body", emphasized: true },
+    { n: 7, titleKey: "onb.s7.title", bodyKey: "onb.s7.body" },
+  ];
   return `
-  <section id="quickstart" class="border-t border-border py-20 md:py-28">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="mx-auto max-w-2xl text-center">
-        <h2 class="text-3xl font-bold tracking-tight md:text-4xl">Get started in minutes</h2>
-        <p class="mt-4 text-text-muted text-lg">Deploy with Helm or run locally with Docker Compose.</p>
-      </div>
-      <div class="mx-auto mt-12 max-w-3xl">
-        <div class="rounded-xl border border-border bg-surface-raised overflow-hidden">
-          <div class="flex border-b border-border">
-            <button data-tab="helm" class="tab-btn active relative px-5 py-3 text-sm font-medium text-text transition-colors">Helm Install</button>
-            <button data-tab="docker" class="tab-btn relative px-5 py-3 text-sm font-medium text-text-muted transition-colors hover:text-text">Docker Compose</button>
-          </div>
-          <div class="relative">
-            <div data-panel="helm" class="tab-panel">
-              <pre class="overflow-x-auto p-6 font-mono text-sm leading-relaxed text-text-muted"><code>${helmCode}</code></pre>
-            </div>
-            <div data-panel="docker" class="tab-panel hidden">
-              <pre class="overflow-x-auto p-6 font-mono text-sm leading-relaxed text-text-muted"><code>${dockerCode}</code></pre>
-            </div>
-          </div>
-        </div>
-        <p class="mt-6 text-center text-sm text-text-muted">
-          See the <a href="${GITHUB_URL}#quick-start" target="_blank" rel="noopener" class="text-primary-light hover:underline">full documentation</a> for prerequisites and configuration options.
-        </p>
+  <section id="how" class="py-20">
+    <h2 class="font-mono text-xs tracking-[0.2em] text-[var(--muted-foreground)] uppercase mb-8">${t("onb.heading")}</h2>
+    <ol class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 list-none p-0">
+      ${steps
+        .map((s) => {
+          const card = s.emphasized
+            ? "border-[var(--home-accent)] bg-[var(--home-grid)]"
+            : "border-[var(--border)] bg-[var(--card)]";
+          const num = s.emphasized
+            ? "bg-[var(--home-accent)] text-[var(--home-accent-fg)]"
+            : "bg-[var(--secondary)] text-[var(--secondary-foreground)]";
+          const title = s.emphasized ? "text-[var(--home-accent)]" : "";
+          return `
+          <li class="rounded-lg border p-5 ${card}">
+            <div class="inline-flex items-center justify-center h-7 w-7 rounded-full font-mono text-xs mb-3 ${num}">${s.n}</div>
+            <h3 class="text-sm font-semibold mb-1 ${title}">${t(s.titleKey)}</h3>
+            <p class="text-xs text-[var(--muted-foreground)] leading-relaxed">${t(s.bodyKey)}</p>
+          </li>`;
+        })
+        .join("")}
+    </ol>
+    <a href="${DOCS_URL}" target="_blank" rel="noopener noreferrer" class="inline-block mt-6 font-mono text-xs text-[var(--home-accent)] hover:underline no-underline">${t("onb.docs")}</a>
+  </section>`;
+}
+
+function finalCta(): string {
+  return `
+  <section class="my-20 py-16 border-y-2 border-[var(--home-accent)]">
+    <div class="text-center">
+      <h2 class="text-3xl lg:text-4xl font-semibold tracking-tight max-w-2xl mx-auto">${t("cta.heading")}</h2>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="${PLATFORM_URL}" class="font-mono text-sm px-5 py-2.5 rounded-md bg-[var(--home-accent)] text-[var(--home-accent-fg)] hover:opacity-90 no-underline">${t("cta.primary")}</a>
+        <a href="${SELFHOST_URL}" target="_blank" rel="noopener noreferrer" class="font-mono text-sm px-5 py-2.5 rounded-md border border-[var(--border)] hover:opacity-90 no-underline text-[var(--foreground)]">${t("cta.secondary")}</a>
       </div>
     </div>
   </section>`;
 }
 
 function footer(): string {
+  const icp =
+    locale === "zh"
+      ? `<p class="mt-2 text-center font-mono text-[10px] text-[var(--muted-foreground)] space-x-3">
+           <a class="hover:text-[var(--foreground)] no-underline text-[var(--muted-foreground)]" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">京ICP备2022017521号-2</a>
+           <a class="hover:text-[var(--foreground)] no-underline text-[var(--muted-foreground)]" href="https://beian.mps.gov.cn/#/query/webSearch?code=11010502060080" target="_blank" rel="noopener noreferrer">京公网安备11010502060080号</a>
+         </p>`
+      : "";
   return `
-  <footer class="border-t border-border py-10">
-    <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 text-sm text-text-muted md:flex-row">
-      <div class="flex items-center gap-2">
-        <div class="flex size-6 items-center justify-center rounded bg-primary text-white font-mono font-bold text-xs">A</div>
-        <span>agentserver</span>
+  <footer class="border-t border-[var(--border)] py-10 mt-10">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="grid md:grid-cols-3 gap-8 text-sm">
+        <div>
+          <p class="font-mono font-semibold mb-3">${t("footer.col1.title")}</p>
+          <ul class="space-y-1 text-[var(--muted-foreground)] list-none p-0">
+            <li><a class="hover:text-[var(--foreground)] no-underline text-[var(--muted-foreground)]" href="https://agentserver.dev" target="_blank" rel="noopener noreferrer">agentserver.dev</a></li>
+            <li><a class="hover:text-[var(--foreground)] no-underline text-[var(--muted-foreground)]" href="${GITHUB_URL}" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+            <li><a class="hover:text-[var(--foreground)] no-underline text-[var(--muted-foreground)]" href="${DOCS_URL}" target="_blank" rel="noopener noreferrer">Docs</a></li>
+            <li><a class="hover:text-[var(--foreground)] no-underline text-[var(--muted-foreground)]" href="${RELEASES_URL}" target="_blank" rel="noopener noreferrer">Changelog</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="font-mono font-semibold mb-3">${t("footer.col2.title")}</p>
+          <ul class="space-y-1 text-[var(--muted-foreground)] list-none p-0">
+            <li><span>${t("footer.col2.weixin")}</span></li>
+            <li><span>${t("footer.col2.telegram")}</span></li>
+            <li><a class="hover:text-[var(--foreground)] no-underline text-[var(--muted-foreground)]" href="${ISSUES_URL}" target="_blank" rel="noopener noreferrer">${t("footer.col2.issues")}</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="font-mono font-semibold mb-3">${t("footer.col3.title")}</p>
+          <ul class="space-y-1 text-[var(--muted-foreground)] list-none p-0">
+            <li><a class="hover:text-[var(--foreground)] no-underline text-[var(--muted-foreground)]" href="${GITHUB_URL}/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">${t("footer.col3.license")}</a></li>
+            <li><span>${t("footer.col3.privacy")}</span></li>
+            <li><span>${t("footer.col3.contact")}</span></li>
+          </ul>
+        </div>
       </div>
-      <div class="flex items-center gap-4">
-        <a href="${PLATFORM_URL}" target="_blank" rel="noopener" class="text-text-muted hover:text-text transition-colors no-underline">Platform</a>
-        <a href="${GITHUB_URL}" target="_blank" rel="noopener" class="text-text-muted hover:text-text transition-colors">${icon("github")}</a>
-      </div>
+      ${icp}
     </div>
   </footer>`;
 }
 
-function initTabs(): void {
-  document.querySelectorAll<HTMLButtonElement>(".tab-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const tabId = btn.dataset.tab;
-      if (!tabId) return;
+const pageHtml = `<!doctype html><html><body>${navBar()}<main class="mx-auto max-w-6xl px-6">${hero()}${quote()}${pillars()}${compare()}${onboarding()}${finalCta()}</main>${footer()}</body></html>`;
 
-      const container = btn.closest("section")!;
+const parsed = new DOMParser().parseFromString(pageHtml, "text/html");
+const app = document.querySelector<HTMLDivElement>("#app")!;
+app.setAttribute("data-theme", "home");
+app.className = "min-h-screen bg-[var(--background)] text-[var(--foreground)]";
+app.replaceChildren(...Array.from(parsed.body.childNodes));
 
-      container
-        .querySelectorAll<HTMLButtonElement>(".tab-btn")
-        .forEach((b) => {
-          b.classList.toggle("active", b.dataset.tab === tabId);
-          b.classList.toggle("text-text", b.dataset.tab === tabId);
-          b.classList.toggle("text-text-muted", b.dataset.tab !== tabId);
-        });
-
-      container
-        .querySelectorAll<HTMLElement>(".tab-panel")
-        .forEach((p) => {
-          p.classList.toggle("hidden", p.dataset.panel !== tabId);
-        });
-    });
+const langBtn = document.getElementById("lang-toggle");
+if (langBtn) {
+  langBtn.addEventListener("click", () => {
+    const next = langBtn.dataset.next;
+    if (next === "zh" || next === "en") setLocaleAndReload(next);
   });
 }
-
-document.querySelector<HTMLDivElement>("#app")!.innerHTML =
-  navbar() + hero() + features() + architecture() + quickstart() + footer();
-
-initTabs();

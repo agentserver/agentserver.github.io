@@ -1,17 +1,17 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="agentserver — Self-hosted platform for running AI coding agents in the browser. Like code-server, but for opencode." />
-    <title>agentserver — Run your coding agent anywhere</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <meta name="description" content="agentserver — weave laptops, cloud sandboxes, and home servers into one workspace. Command it from your browser, your CLI, or your WeChat chat." />
+    <title>agentserver — Your Personal Computility</title>
   </head>
-  <body class="bg-surface text-text antialiased">
+  <body>
     <div id="app"></div>
+    <script>
+      (function(){var t=localStorage.getItem('theme');if(t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme:dark)').matches))document.documentElement.classList.add('dark')})()
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
