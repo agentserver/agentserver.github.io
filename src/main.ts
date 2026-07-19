@@ -510,6 +510,9 @@ function footer(): string {
           </ul>
         </div>
       </div>
+      <p class="mt-8 text-center font-mono text-xs text-[var(--muted-foreground)]">
+        © 2026 Bit Precise, LLC. ${locale === "zh" ? "版权所有。" : "All rights reserved."}
+      </p>
       ${icp}
     </div>
   </footer>`;
